@@ -5,7 +5,7 @@ const static = require("static");
 const bodyParser = require("body-parser")
 const dotenv = require('dotenv');
 const connectDatabase = require("./config/db.js");
-const errorMiddleware = require("./middleware/error");   
+const errorMiddleware = require("./middleware/error");  
 dotenv.config({path:"config/config.env"})
 app.use(express.json());
 app.use(cookieParser());
@@ -15,8 +15,12 @@ app.set('view engine', 'ejs');
 connectDatabase();
 
 const user = require("./routers/userRoute.js");
-app.use("/api/v1",user);
+const product = require("./routers/productRoute.js");
+const payment = require("./routers/paymentRoute.js");
 
+app.use("/api/v1",user);
+app.use("/api/v1",product);
+app.use("/api/v1",payment);
 
 
 

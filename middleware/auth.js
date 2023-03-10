@@ -4,7 +4,7 @@ const userModel =  require("../model/userModel");
 
 
 
-module.exports = async (req,res, next)=>{
+const Authentication = async (req,res, next)=>{
 
 const {token}
  = req.cookies;
@@ -17,9 +17,26 @@ const {token}
 
  const decodeData = jwt.verify(token,process.env.JWT_SECRET);
 
-  req.user = await userModel.findById(decodeData._id);
-
+  req.user = await userModel.findById(decodeData.id);  // and also add user as a key to req object
+ console.log(req.user);
   next();
 
 
 }
+
+const isRole = (...roles)=>{
+
+   return  (req, res, next)=>{
+       
+         if(!roles.includes(req.user.role))
+        {   
+         next( new ErrorHandler("You are not authorised to access this",403));
+        }
+    next();
+   }
+
+}
+ 
+
+
+module.exports = {Authentication, isRole}
